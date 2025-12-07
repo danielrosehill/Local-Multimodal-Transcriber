@@ -2,6 +2,18 @@
 
 This document evaluates potential models for the local multimodal transcriber project, focusing on 12GB VRAM constraint and AMD ROCm compatibility.
 
+**HF Collection**: [danielrosehill/audio-multimodal-models](https://huggingface.co/collections/danielrosehill/audio-multimodal-models)
+
+## Quick Summary (12GB VRAM Constraint)
+
+| Model | Params | VRAM (BF16) | Max Audio | Fits? | Priority |
+|-------|--------|-------------|-----------|-------|----------|
+| Voxtral-Mini-3B | 3B | ~9.5GB | 30 min | Yes | 1st |
+| Ultravox v0.5 1B | 1B | ~2GB | TBD | Yes | 3rd |
+| Phi-4-Multimodal | 6B | ~12GB | TBD | Tight | 4th |
+| Kimi-Audio-7B | 10B | TBD | TBD | Test needed | 2nd |
+| Qwen2-Audio-7B | 8B | ~17GB | 30 sec | Needs quant | 5th |
+
 ## Approach Comparison
 
 | Approach | Description | Pros | Cons |
@@ -11,9 +23,89 @@ This document evaluates potential models for the local multimodal transcriber pr
 
 ---
 
-## True Multimodal Candidates
+## Priority Candidates (Fits 12GB VRAM)
 
-### 1. Qwen2-Audio-7B
+### 1. Voxtral-Mini-3B (TOP CANDIDATE)
+
+**Source**: [mistralai/Voxtral-Mini-3B-2507](https://huggingface.co/mistralai/Voxtral-Mini-3B-2507)
+
+- **Parameters**: 3B (built on Ministral 3B backbone)
+- **VRAM**: ~9.5GB (BF16) — **fits with headroom**
+- **Max Audio**: 30 min transcription, 40 min understanding
+- **Context**: 32K tokens
+- **License**: Apache 2.0
+
+**Assessment**:
+- Best fit for our constraints — small enough to run comfortably
+- Long audio support (30 min) far exceeds our 5-10 min target
+- Dedicated transcription mode with temperature=0.0
+- 8 languages with auto-detection
+- Note: System prompts not yet supported — cleanup instructions go in user prompt
+- Note: ROCm not explicitly tested, but uses Transformers (should work)
+
+**Test Priority**: 1st
+
+---
+
+### 2. Kimi-Audio-7B-Instruct
+
+**Source**: [moonshotai/Kimi-Audio-7B-Instruct](https://huggingface.co/moonshotai/Kimi-Audio-7B-Instruct)
+
+- **Parameters**: 10B (per HF metadata)
+- **VRAM**: TBD — may need quantization for 12GB
+- **Architecture**: Audio-Text-to-Text
+- **License**: TBD
+
+**Assessment**:
+- From Moonshot AI (Kimi team)
+- Instruct-tuned — good for following cleanup prompts
+- Needs VRAM testing to confirm viability
+
+**Test Priority**: 2nd (after confirming VRAM)
+
+---
+
+### 3. Ultravox v0.5 (Llama 3.2 1B)
+
+**Source**: [fixie-ai/ultravox-v0_5-llama-3_2-1b](https://huggingface.co/fixie-ai/ultravox-v0_5-llama-3_2-1b)
+
+- **Parameters**: ~1B
+- **VRAM**: Very low — **easily fits**
+- **Latency**: ~150ms TTFT (optimized for real-time)
+- **License**: MIT
+
+**Assessment**:
+- Extremely lightweight — will definitely run
+- Optimized for real-time voice, not batch transcription
+- May lack capability for quality cleanup transcription
+- Worth testing as a baseline
+
+**Test Priority**: 3rd (quick test as baseline)
+
+---
+
+### 4. Phi-4-Multimodal-Instruct
+
+**Source**: [microsoft/Phi-4-multimodal-instruct](https://huggingface.co/microsoft/Phi-4-multimodal-instruct)
+
+- **Parameters**: 6B
+- **VRAM**: ~12GB FP16 (tight fit), ~6-8GB quantized
+- **Architecture**: ASR-focused multimodal
+- **License**: MIT
+
+**Assessment**:
+- Microsoft's efficient multimodal approach
+- Classified as ASR on HF — may be more transcription-focused
+- MIT license is very permissive
+- Tight VRAM fit — may need quantization
+
+**Test Priority**: 4th
+
+---
+
+## Secondary Candidates (May Need Quantization)
+
+### 5. Qwen2-Audio-7B
 
 **Source**: [Alibaba Qwen](https://github.com/QwenLM/Qwen2-Audio)
 
@@ -143,9 +235,12 @@ SeamlessM4T Large (~10.7GB)
 
 ## Recommended Testing Order
 
-1. **Qwen2-Audio-7B** (GPTQ/AWQ 4-bit) — test if cleanup quality holds
-2. **faster-whisper + Phi-3-mini** — fallback if multimodal degrades too much
-3. **Qwen2.5-Omni-7B** — if Qwen2-Audio works, try newer model
+1. **Voxtral-Mini-3B** — best VRAM fit, 30min audio, dedicated transcription mode
+2. **Kimi-Audio-7B-Instruct** — if VRAM allows, strong instruct-following
+3. **Ultravox v0.5 1B** — quick baseline test (very small)
+4. **Phi-4-Multimodal** — Microsoft's efficient approach
+5. **Qwen2-Audio-7B** (4-bit quantized) — if above don't satisfy, test quantized
+6. **faster-whisper + Phi-3-mini** — pipeline fallback if multimodal fails
 
 ---
 
