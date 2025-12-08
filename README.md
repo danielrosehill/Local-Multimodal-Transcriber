@@ -10,7 +10,9 @@ Potential target models have been identified and the list will change over time.
 
 For those with more powerful local inference available (>12 GB VRAM), this constraint can be overcome.
 
-This repository includes a submodule of test prompts that I created in order to validate through audio understanding.  That repository is available directly [here](https://github.com/danielrosehill/Audio-Understanding-Test-Prompts).
+This repository includes a submodule of test prompts that I created in order to validate audio understanding by challenging the model to identify emotional tone, accent, and conduct various text reformatting workloads (assessing for the text postprocessing capability).  That repository is available directly [here](https://github.com/danielrosehill/Audio-Understanding-Test-Prompts).
+
+The various results in *this* repo, however, show that Voxtral is extremely capable of driving this workload!
 
 ## Concept
 
