@@ -2,7 +2,15 @@
 
 > **Status: Work in Progress**
 
-A local, GPU-accelerated speech-to-text system using multimodal audio models. Unlike traditional ASR pipelines that require separate transcription and cleanup steps, this tool uses models with native audio understanding to transcribe and format in a single pass.
+ This repository is a planning repository attempting to create a viable UI for multimodal audio AI on my local desktop environment (Linux, AMD).
+
+Multimodal models offer very promising capabilities over traditional ASR tools, specifically in the transcription use case, combining the ability to generate accurate transcriptions with applying post processing text edits. 
+
+Potential target models have been identified and the list will change over time. The basic implementation was validated in so far as gaining multimodal outputs based on audio and text inputs via local inference was possible. However, the challenge is finding a model that has a sufficiently small quantization for my current hardware. 
+
+For those with more powerful local inference available (>12 GB VRAM), this constraint can be overcome.
+
+This repository includes a submodule of test prompts that I created in order to validate through audio understanding.  That repository is available directly [here](https://github.com/danielrosehill/Audio-Understanding-Test-Prompts).
 
 ## Concept
 
