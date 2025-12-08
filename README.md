@@ -16,9 +16,23 @@ A local, GPU-accelerated speech-to-text system using multimodal audio models. Un
 - 12 GB VRAM
 - ROCm acceleration via Docker
 
-## Initial Findings: Voxtral Viability Assessment
+## Models
 
-The primary goal of this repository isn't to run comprehensive model evaluations, but rather to assess whether running multimodal audio-understanding models locally is a viable alternative to traditional pure-play ASR pipelines.
+Potential models are:
+
+- Multimodal "omni" models 
+- Multimodal audio models (Hugging Face task: audio-text to text)
+
+These include:
+
+- Voxtral (Mistral) 
+- Qwen 2 Audio 
+- Qwen Omni 
+- Microsoft Phi 4 Multimodal 
+
+For a more complete list, see [here](https://github.com/danielrosehill/Audio-Multimodal-AI-Resources).
+
+---
 
 ### Voxtral Benchmark Results
 
