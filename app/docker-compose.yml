@@ -1,0 +1,24 @@
+services:
+  voxtral-test:
+    build: .
+    image: voxtral-test:latest
+    container_name: voxtral-test
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+    group_add:
+      - "44"    # video
+      - "992"   # render
+    environment:
+      - HSA_OVERRIDE_GFX_VERSION=11.0.1
+      - PYTORCH_ROCM_ARCH=gfx1101
+      - HF_HOME=/cache/huggingface
+    volumes:
+      - ../idea:/app/idea:ro
+      - ./test:/app/test
+      - ./output:/app/output
+      - ~/.cache/huggingface:/cache/huggingface
+    working_dir: /app
+    # Interactive mode - override CMD
+    stdin_open: true
+    tty: true

@@ -1,0 +1,1 @@
+Provide the BCP 47 language tag that best describes the speaker's accent and regional variety. Include the language subtag, region subtag, and any applicable variant subtags. For example: en-US, en-GB-scotland, pt-BR, es-419. Return only the tag.

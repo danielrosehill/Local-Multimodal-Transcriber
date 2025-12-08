@@ -1,0 +1,3 @@
+[submodule "test-prompts"]
+	path = test-prompts
+	url = https://github.com/danielrosehill/Audio-Understanding-Test-Prompts

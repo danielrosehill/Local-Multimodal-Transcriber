@@ -1,0 +1,1 @@
+Can you identify the accent of the speaker in the audio? Be as specific as you can. Don't just say, for example, the speaker has an American accent. What can you identify about the particular manner in which the speaker enunciates? Does it suggest a specific geographical region? Can you give examples that are grounded in specific things that the speaker said? 
